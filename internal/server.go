@@ -12,9 +12,15 @@ var server *ors.Server
 func bootServer() {
 	server = ors.
 		NewServer(Config.RoboMaster.Address,
-			proto.S1StuMainJudgeClientId+1,
+			73,
 			proto.S1StuMainJudgeClientTId,
 			proto.S1StuMainJudgeClientTeamId)
+
+	server.WithLogger(newServerLogger("transport"))
+
+	server.Debug = DEBUG
+
+	server.WithAnyHandler(onRecvProto)
 
 	server.WithHandler(proto.ProtoIDS1ProtoLoginAck, onRecvLoginAck)
 
@@ -34,6 +40,10 @@ func bootServer() {
 	atexit.Register(func() {
 		server.Close()
 	})
+}
+
+func onRecvProto(ctx *proto.S1ProtoContext) {
+	writeRecord(ctx)
 }
 
 func onRecvLoginAck(ctx *proto.S1ProtoContext) {

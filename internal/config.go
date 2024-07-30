@@ -10,8 +10,9 @@ import (
 )
 
 type AppConfig struct {
-	Addr       string `json:"addr"`
-	RoboMaster struct {
+	Addr        string `json:"addr"`
+	RecordProto bool   `json:"record_proto"`
+	RoboMaster  struct {
 		Address string `json:"address"`
 	} `json:"rm"`
 }

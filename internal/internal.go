@@ -4,6 +4,7 @@ func init() {
 	bootLogger()
 	bootConfig()
 	bootCache()
+	bootRecorder()
 	bootServer()
 
 	Version = &ServerVersion{
