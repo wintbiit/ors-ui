@@ -98,13 +98,13 @@ jobs:
           mkdir dist
 
       - name: Download Artifact Linux
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ors-ui-linux
           path: ./dist
 
       - name: Download Artifact Windows
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: ors-ui-windows
           path: ./dist
