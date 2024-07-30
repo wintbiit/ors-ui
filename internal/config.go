@@ -3,19 +3,21 @@ package internal
 import (
 	"os"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/bytedance/sonic"
 	"github.com/rs/zerolog/log"
 )
 
-type Config struct {
-	Port       string `json:"port"`
+type AppConfig struct {
+	Addr       string `json:"addr"`
 	RoboMaster struct {
-		Address string
+		Address string `json:"address"`
 	} `json:"rm"`
 }
 
 var (
-	config *Config
+	Config *AppConfig
 	DEBUG  = os.Getenv("DEBUG") == "true"
 )
 
@@ -27,7 +29,7 @@ func bootConfig() {
 			log.Fatal().Err(err).Msg("Failed to open config file")
 		}
 
-		defaultConfig, er := sonic.ConfigFastest.MarshalIndent(&Config{}, "", "  ")
+		defaultConfig, er := sonic.ConfigFastest.MarshalIndent(&AppConfig{}, "", "  ")
 		if er == nil {
 			f.Write(defaultConfig)
 		}
@@ -37,9 +39,19 @@ func bootConfig() {
 
 	defer f.Close()
 
-	if err = sonic.ConfigFastest.NewDecoder(f).Decode(config); err != nil {
+	Config = new(AppConfig)
+
+	if err = sonic.ConfigFastest.NewDecoder(f).Decode(Config); err != nil {
 		log.Fatal().Err(err).Msg("Failed to parse config file")
 	}
 
-	log.Info().Interface("config", config).Msg("Config loaded")
+	log.Info().Interface("config", Config).Msg("AppConfig loaded")
+
+	if DEBUG {
+		gin.SetMode(gin.DebugMode)
+		log.Info().Msg("Debug mode enabled")
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+		log.Info().Msg("Release mode enabled")
+	}
 }

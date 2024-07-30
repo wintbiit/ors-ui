@@ -11,7 +11,7 @@ import (
 
 func bootLogger() {
 	lumberjackLogger := lumberjack.Logger{
-		Filename:   "logs/smooth-backup.log",
+		Filename:   "logs/ors.log",
 		MaxSize:    10, // megabytes
 		MaxBackups: 10,
 		MaxAge:     28, // days
