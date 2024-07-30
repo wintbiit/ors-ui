@@ -43,7 +43,7 @@ func bootServer() {
 }
 
 func onRecvProto(ctx *proto.S1ProtoContext) {
-	writeRecord(ctx)
+	go writeRecord(ctx)
 }
 
 func onRecvLoginAck(ctx *proto.S1ProtoContext) {
