@@ -15,6 +15,10 @@ type AppConfig struct {
 	RoboMaster  struct {
 		Address string `json:"address"`
 	} `json:"rm"`
+	Redis struct {
+		Address  string `json:"address"`
+		Password string `json:"password"`
+	} `json:"redis"`
 }
 
 var (

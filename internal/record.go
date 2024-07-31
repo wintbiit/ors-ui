@@ -2,8 +2,6 @@ package internal
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/bytedance/sonic"
 	"github.com/glebarez/sqlite"
 	"github.com/rs/zerolog/log"
@@ -19,6 +17,7 @@ var (
 
 type Record struct {
 	ProtoID    uint16
+	ProtoName  string
 	DataLen    uint32
 	ProtoType  uint16
 	AckType    byte
@@ -35,8 +34,10 @@ func bootRecorder() {
 
 	var err error
 
-	dsn := fmt.Sprintf("file:logs/record-%s.db?cache=shared&mode=rwc", time.Now().Format("2006-01-02-15-04-05"))
-	recordDb, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{})
+	dsn := fmt.Sprintf("file:logs/record.db?cache=shared&mode=rwc")
+	recordDb, err = gorm.Open(sqlite.Open(dsn), &gorm.Config{
+		Logger: &gormLogger{},
+	})
 
 	if err != nil {
 		log.Fatal().Err(err).Msg("failed to open record db")
@@ -70,6 +71,11 @@ func writeRecord(ctx *proto.S1ProtoContext) {
 		return
 	}
 
+	protoName, ok := proto.ProtoIdMap[ctx.Header.ProtoId]
+	if !ok {
+		protoName = "unknown"
+	}
+
 	inst := proto.CreateProtoInstance(ctx.Header.ProtoId)
 
 	instJ, err := sonic.ConfigFastest.MarshalToString(inst)
@@ -79,6 +85,7 @@ func writeRecord(ctx *proto.S1ProtoContext) {
 
 	recordChn <- &Record{
 		ProtoID:    ctx.Header.ProtoId,
+		ProtoName:  protoName,
 		DataLen:    ctx.Header.DataLen,
 		ProtoType:  ctx.Header.ProtoType,
 		AckType:    ctx.Header.AckType,

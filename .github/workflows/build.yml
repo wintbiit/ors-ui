@@ -28,7 +28,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ors-ui-linux
-          path: ./bin
+          path: ./bin/ors-ui
 
   backend-windows:
     name: Backend-Windows
@@ -47,8 +47,8 @@ jobs:
       - name: Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ors-ui-windows
-          path: ./bin
+          name: ors-ui-windows.exe
+          path: ./bin/or-ui.exe
 
   release:
     name: Release
@@ -80,13 +80,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: ors-ui-linux
-          path: ./dist
+          path: ./dist/
 
       - name: Download Artifact Windows
         uses: actions/download-artifact@v4
         with:
-          name: ors-ui-windows
-          path: ./dist
+          name: ors-ui-windows.exe
+          path: ./dist/
 
       - name: ls
         run: |

@@ -9,7 +9,7 @@ require (
 	github.com/redis/go-redis/v9 v9.6.1
 	github.com/rs/zerolog v1.33.0
 	github.com/tebeka/atexit v0.3.0
-	github.com/wintbiit/ors-proto v0.0.4
+	github.com/wintbiit/ors-proto v0.0.6
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/gorm v1.25.11
 )

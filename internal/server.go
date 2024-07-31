@@ -5,40 +5,43 @@ import (
 	"github.com/tebeka/atexit"
 	"github.com/wintbiit/ors-proto"
 	"github.com/wintbiit/ors-proto/proto"
+	"time"
 )
 
-var server *ors.Server
+var client *ors.Client
 
 func bootServer() {
-	server = ors.
-		NewServer(Config.RoboMaster.Address,
+	client = ors.
+		NewClient(Config.RoboMaster.Address,
 			73,
 			proto.S1StuMainJudgeClientTId,
 			proto.S1StuMainJudgeClientTeamId)
 
-	server.WithLogger(newServerLogger("transport"))
+	client.WithLogger(newServerLogger("transport"))
 
-	server.Debug = DEBUG
+	client.Debug = DEBUG
 
-	server.WithAnyHandler(onRecvProto)
+	client.WithAnyHandler(onRecvProto)
 
-	server.WithHandler(proto.ProtoIDS1ProtoLoginAck, onRecvLoginAck)
+	client.WithHandler(proto.ProtoIDS1ProtoLoginAck, onRecvLoginAck)
 
-	server.WithHandler(proto.ProtoIDS1ProtoHeartBeatAck, onRecvHeartBeatAck)
+	client.WithHandler(proto.ProtoIDS1ProtoHeartBeatAck, onRecvHeartBeatAck)
 
-	err := server.Connect()
+	err := client.Connect()
 	if err != nil {
-		log.Fatal().Msgf("server connect failed: %v", err)
+		log.Fatal().Msgf("client connect failed: %v", err)
 	}
 
-	err = server.Login(proto.S1StuMainJudgeLoginPass)
+	time.Sleep(1 * time.Second)
+
+	err = client.Login(proto.S1StuMainJudgeLoginPass)
 
 	if err != nil {
 		log.Fatal().Msgf("login failed: %v", err)
 	}
 
 	atexit.Register(func() {
-		server.Close()
+		client.Close()
 	})
 }
 
