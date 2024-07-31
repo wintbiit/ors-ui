@@ -1,0 +1,17 @@
+{
+  "debug": true,
+  "branches": [
+    "master"
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    ["@semantic-release/github", {
+      "assets": [
+        {"path": "dist/ors-ui", "name": "ors-ui-${nextRelease.version}-linux"},
+        {"path": "dist/ors-ui.exe", "name": "ors-ui-${nextRelease.version}-windows.exe"}
+      ]
+    }]
+  ]
+}
