@@ -48,7 +48,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ors-ui-windows.exe
-          path: ./bin/or-ui.exe
+          path: ./bin/ors-ui.exe
 
   release:
     name: Release
